@@ -1,0 +1,70 @@
+﻿
+
+
+
+<div>
+    <div style="width: 212px;">
+        <div class="single-product">
+            <div class="product-f-image">
+                <img src="~/img/product-5.jpg" alt="商品图片">
+                <div class="product-hover">
+                    <a href="#" class="add-to-cart-link"><i class="fa fa-shopping-cart"></i> Add to cart</a>
+                    <!--同时传入商品ID-->
+                    <a href="single-product.html" class="view-details-link"><i class="fa fa-link"></i> See details</a>
+                </div>
+            </div>
+            <h2>Nokia Lumia 1320</h2>
+            <div class="product-carousel-price">
+                <ins>$899.00</ins>
+                <del>$999.00</del>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<h1>ProductApp-------webAPI</h1>
+<hr />
+
+<div>
+    <h2>All Products</h2>
+    <ul id="products" />
+</div>
+
+<div>
+    <h2>Seach by ID</h2>
+    <input type="text" id="proid" size="5" />
+    <input type="button" value="Seach" onclick="find();" />
+    <p id="product" />
+</div>
+<!--异步请求的js-->
+<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.0.3.min.js"></script>
+<script>
+    var uri = 'api/products';
+    $(document).ready(function () {
+        // Send an AJAX request
+        $.getJSON(uri)
+            .done(function (data) {
+                // On success, 'data' contains a list of products.
+                $.each(data, function (key, item) {
+                    // Add a list item for the product.
+                    $('<li>', { text: formatItem(item) }).appendTo($('#products'));
+                });
+            });
+    });
+    //获取product的信息。这里只获取名字与原始价格
+    function formatItem(item) {
+        return item.PName + ':$' + item.POriginPrice;
+    }
+
+    function find() {
+        var id = $('#prodId').val();
+        $.getJSON(uri + '/' + id)
+            .done(function (data) {
+                $('#product').text(formatItem(data));
+            })
+            .fail(function (jqXHR, textStatus, err) {
+                $('#product').text('Error: ' + err);
+            });
+    }
+</script>
